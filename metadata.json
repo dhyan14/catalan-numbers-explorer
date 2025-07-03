@@ -1,0 +1,6 @@
+{
+  "name": "Catalan Numbers Explorer",
+  "description": "An interactive journey into the world of Catalan numbers, from grid paths to combinatorial sequences.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

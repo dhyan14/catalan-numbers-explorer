@@ -1,0 +1,448 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+*/
+
+/* General styling */
+body {
+    font-family: 'Roboto Mono', monospace;
+    background-color: #121212;
+    color: #e0e0e0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+#root {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: #00bcd4;
+    text-shadow: 0 0 10px #00bcd4;
+    margin-bottom: 1.2rem;
+    font-size: 2rem;
+}
+
+/* Puzzle Container */
+.puzzle-container {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 2rem; /* Adjusted padding */
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Key change for layout */
+    transition: all 0.3s ease;
+}
+
+.puzzle-content-area {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Puzzle Content */
+.puzzle-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.puzzle-content h2 {
+    font-family: 'Orbitron', sans-serif;
+    color: #00bcd4;
+    text-shadow: 0 0 5px rgba(0, 188, 212, 0.7);
+    margin-bottom: 1.5rem;
+}
+
+.puzzle-content p {
+    margin-bottom: 1rem;
+    max-width: 450px;
+    line-height: 1.6;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.puzzle-content ul {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    max-width: 350px;
+    margin: 1rem auto;
+}
+
+.puzzle-content li {
+    background: #252525;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-left: 3px solid #00bcd4;
+    border-radius: 3px;
+}
+
+/* Navigation */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid #333;
+}
+
+.nav-button {
+    background-color: #00bcd4;
+    color: #121212;
+    border: none;
+    padding: 10px 20px;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.nav-button:hover:not(:disabled) {
+    background-color: #88ffff;
+    box-shadow: 0 0 15px #00bcd4;
+}
+
+.nav-button:disabled {
+    background-color: #444;
+    color: #777;
+    cursor: not-allowed;
+}
+
+.nav-button.small {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+.progress-indicator {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Intro Step */
+.catalan-sequence {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 1.5rem 0;
+}
+
+.catalan-number {
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    color: #88ffff;
+}
+
+/* Path Drawing Steps (Sequence & Challenge) */
+.dyck-path-container {
+    margin: 0 auto;
+    width: 300px;
+    height: 300px;
+}
+.dyck-grid-interactive {
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+}
+.grid-dot {
+    fill: #333;
+    stroke: #00bcd4;
+    stroke-width: 1.5;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+.grid-dot:not(.valid-move) {
+    cursor: not-allowed;
+}
+.grid-dot.active {
+    fill: #88ffff;
+}
+.grid-dot.valid-move {
+    fill: #ff9800;
+    stroke: #ff9800;
+    animation: pulse 1.5s infinite;
+}
+.grid-dot.valid-move:hover {
+    fill: #ffc947;
+}
+
+.user-path {
+    fill: none;
+    stroke: #ff9800;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: d 0.1s linear, stroke 0.3s ease, opacity 0.3s ease;
+}
+
+.preview-path {
+    fill: none;
+    stroke: #ff9800;
+    stroke-width: 2;
+    stroke-dasharray: 4 4;
+    opacity: 0.7;
+    pointer-events: none; /* So it doesn't block clicks on dots */
+}
+
+@keyframes pulse {
+    0% { r: 8; }
+    50% { r: 10; }
+    100% { r: 8; }
+}
+
+.dyck-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem; /* Add space above the main nav line */
+}
+
+.status-message {
+    min-height: 1.5em; /* Prevent layout shift */
+    font-size: 0.9em;
+    color: #aaa;
+    transition: color 0.3s ease;
+}
+.status-message.success {
+    color: #4caf50;
+    font-weight: bold;
+}
+.status-message.failure {
+    color: #f44336;
+    font-weight: bold;
+}
+
+
+/* Path Sequence Display */
+.path-sequence-container {
+    margin-top: 1rem;
+    text-align: center;
+}
+.path-sequence-container h3 {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 0.5rem;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+.path-sequence-display {
+    background-color: #2a2a2a;
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    color: #e0e0e0;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.2rem;
+    min-height: 1.5em;
+    letter-spacing: 0.2em;
+    border: 1px solid #333;
+    line-height: 1.5em;
+}
+
+/* Sequence Challenge Step */
+.target-sequence-container {
+    background-color: #2a2a2a;
+    border: 1px solid #00bcd4;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    margin: 1rem auto;
+    max-width: 90%;
+}
+.target-sequence-container h3 {
+    font-size: 0.8rem;
+    color: #00bcd4;
+    margin: 0 0 0.25rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+.target-sequence-display {
+    color: #88ffff;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.4rem;
+    letter-spacing: 0.2em;
+}
+
+.challenge-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem; /* Add space above the main nav line */
+}
+
+/* Path Calculation Step */
+.guess-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem; /* Increased gap */
+    margin: 1.5rem 0;
+}
+
+.guess-input {
+    background-color: #2a2a2a;
+    border: 1px solid #333;
+    color: #e0e0e0;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.5rem;
+    text-align: center;
+    width: 200px;
+}
+.guess-input:focus {
+    outline: none;
+    border-color: #00bcd4;
+}
+
+.calculation-display {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.visualization-grid {
+    width: 300px;
+    height: 300px;
+    position: relative; /* Needed for absolute positioning of paths */
+}
+
+.visualization-status {
+    font-size: 1.2rem;
+    color: #aaa;
+    min-height: 1.5em;
+    font-family: 'Orbitron', sans-serif;
+    transition: all 0.3s ease-in-out;
+}
+.visualization-status .success {
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.path-counter {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #88ffff;
+    text-shadow: 0 0 10px #00bcd4;
+    min-height: 1.2em; /* Prevents layout shift when number appears */
+    margin-bottom: 1rem; /* Added space below counter */
+}
+
+.enumerated-path {
+    fill: none;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke: #ff9800;
+}
+
+.result-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.guess-result {
+    font-size: 1.1rem;
+    font-weight: bold;
+    min-height: 1.2em; /* Prevent layout shift */
+}
+
+.result-explanation {
+    background-color: #2a2a2a;
+    border: 1px solid #00bcd4;
+    padding: 1rem;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 450px;
+    text-align: left;
+}
+
+.result-explanation p {
+    margin: 0.5rem 0;
+}
+
+.visualize-button {
+    margin-bottom: 1rem; /* Add space below the button */
+}
+
+/* KaTeX styling */
+.katex {
+    font-size: 1.25rem !important;
+    color: #e0e0e0;
+}
+
+.katex .mord.text {
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* Dyck Path Step & Reflection Step */
+.diagonal-line {
+    stroke: #00bcd4;
+    stroke-width: 1.5;
+    stroke-dasharray: 5, 5;
+    opacity: 0.5;
+}
+
+.user-path.invalid {
+    stroke: #f44336;
+}
+
+.user-path.faded {
+    opacity: 0.5;
+}
+
+.grid-dot.extended-dot {
+    fill: #ff9800;
+    stroke: #ff9800;
+}
+
+.reflection-line {
+    stroke: #f44336;
+    stroke-width: 2;
+    stroke-dasharray: 6, 6;
+}
+
+.reflected-path {
+    fill: none;
+    stroke: #4caf50;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
